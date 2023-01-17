@@ -6,7 +6,7 @@ import {
   AiOutlineCopy,
   AiFillQuestionCircle,
   AiFillBell,
-  AiFillDashboard,
+
   AiOutlineCalendar,
 } from "react-icons/ai";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -33,6 +33,7 @@ const StudentHeader = () => {
   const [change, setChange] = React.useState(false);
   const [academic, setAcademic] = useState({} as iSession);
   const [studentData, setStudentData] = useState({} as iData);
+  const [userState, setUserState] = useRecoilState(User);
 
   const user = useRecoilValue(User);
   const [session, setSession] = useRecoilState(Session);
@@ -200,8 +201,22 @@ const StudentHeader = () => {
           ))}
         </ContentDash>
 
-        <LogSide>
+        <LogSide
+          onClick={() => {
+            setUserState(null);
+            // navigate("/");
+          }}
+        >
           <Dimge src="/Img/kod.png" />
+          <div
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              textTransform: "uppercase",
+            }}
+          >
+            Log Out
+          </div>
         </LogSide>
       </Side>
 
@@ -269,10 +284,14 @@ const Dimge = styled.img`
 `;
 
 const LogSide = styled.div`
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
   height: 100px;
   width: 100%;
   justify-content: center;
-
+  align-items: center;
+  flex-direction: column;
   display: flex;
 `;
 
