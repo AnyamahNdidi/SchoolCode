@@ -3,7 +3,6 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { GoBook } from "react-icons/go";
 import { MdOutlineAssignmentLate } from "react-icons/md";
 import { BiTimeFive } from "react-icons/bi";
-import { MdOutlinePlayLesson } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -11,16 +10,21 @@ import "react-circular-progressbar/dist/styles.css";
 import TimeLine from "./TimeLine";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
+import { ClipLoader } from "react-spinners";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Session, User } from "../../Global/RecoilState";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import "./pagination.css";
 import { iDataLeture } from "./LectureData";
-import SliderComp from "./SliderComp";
-import Swal from "sweetalert2";
 import {Link} from "react-router-dom"
-import ClipLoader from "react-spinners/ClipLoader";
+import SliderComp from "./SliderComp";
+
+import pic1 from "../../svg/teacher-icon-01.svg";
+import pic2 from "../../svg/teacher-icon-02.svg";
+import pic3 from "../../svg/student-icon-01.svg";
+import pic4 from "../../svg/student-icon-02.svg";
+
 
 const url: string = "https://school-code.onrender.com";
 const StudentDashboard = () => {
@@ -36,15 +40,11 @@ const StudentDashboard = () => {
   const [session, setSession] = useRecoilState(Session);
   const [clasSubject, setClassSubjects] = React.useState([] as any[]);
   const [notice, setNotice] = useState({} as any);
-  const [academic, setAcademic] = useState({} as any);
-
-  console.log("this is users", user);
 
   const viewingClass = async () => {
     await axios
       .get(`${url}/api/class/${user?.classID}/viewing-class`)
       .then((res) => {
-        console.log("this is the class", res);
         setClassData(res.data.data);
       });
   };
@@ -66,7 +66,6 @@ const StudentDashboard = () => {
       )
       .then((res) => {
         setNotice(res.data.data);
-        console.log("notice: ", notice);
       });
   };
 
@@ -194,37 +193,27 @@ const StudentDashboard = () => {
                       return (
                         <button
 
-                        style={{
-                          backgroundColor: "transparent",
-                          border: "none",
-                          outline: "none",
-                          cursor: "pointer",
-                          fontSize: "18px",
-                          display: "flex",
-                          
-                        }}
+                          style={{
+                            backgroundColor: "transparent",
+                            border: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            fontSize: "18px",
+                            display: "flex",
+                          }}
+                          className={index <= (hover || rating) ? "on" : "off"}
+                          onClick={async () => {
+                            try {
+                              setRating(index);
+                              await axios
+                                .post(
+                                  `${url}/api/lecture-rating/${user._id}/${props._id}/creating-lecture-rating`,
+                                  { ratingLecture: index }
+                                )
+                                .then((res) => {});
+                            } catch (err) {}
+                          }}
 
-                        className={index <= (hover || rating) ? "on" : "off"}
-
-                        onClick={ async()=>{
-                          try {  
-                            setRating(index)
-                            await axios.post(`${url}/api/lecture-rating/${user._id}/${props._id}/creating-lecture-rating` ,   {ratingLecture:index}).then((res)=>{
-                              console.log("rating successfully")
-
-  
-                            })
-
-
-                          }catch(err) {
-                            console.error(err, "something wen wrong");
-                          }
-   
-                        }}
-            
-
-                          
-                        
                           onMouseEnter={() => setHover(index)}
                           onMouseLeave={() => setHover(rating)}
                         >
@@ -239,6 +228,8 @@ const StudentDashboard = () => {
                 {/* <ConBottum bg="#8E6AFF">Click To Rate</ConBottum> */}
 
                 {/* <Boxchild>
+
+
 												<MdOutlinePlayLesson
 													style={{
 														color: "grey",
@@ -286,7 +277,7 @@ const StudentDashboard = () => {
             </One>
             <Two>
               <BackTwo>
-                <img src="/svg/teacher-icon-01.svg" />
+                <img src={pic1} />
               </BackTwo>
             </Two>
           </DisPlay>
@@ -299,7 +290,7 @@ const StudentDashboard = () => {
             </One>
             <Two>
               <BackTwo>
-                <img src="/svg/teacher-icon-02.svg" />
+                <img src={pic2} />
               </BackTwo>
             </Two>
           </DisPlay>
@@ -312,7 +303,7 @@ const StudentDashboard = () => {
             </One>
             <Two>
               <BackTwo>
-                <img src="/svg/student-icon-01.svg" />
+                <img src={pic3} />
               </BackTwo>
             </Two>
           </DisPlay>
@@ -325,7 +316,7 @@ const StudentDashboard = () => {
             </One>
             <Two>
               <BackTwo>
-                <img src="/svg/student-icon-02.svg" />
+                <img src={pic4} />
               </BackTwo>
             </Two>
           </DisPlay>
